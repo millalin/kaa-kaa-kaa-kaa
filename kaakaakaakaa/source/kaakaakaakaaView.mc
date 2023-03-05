@@ -3,6 +3,9 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
+using Toybox.Time;
+using Toybox.Time.Gregorian;
+
 class kaakaakaakaaView extends WatchUi.WatchFace {
 
     function initialize() {
@@ -38,12 +41,28 @@ class kaakaakaakaaView extends WatchUi.WatchFace {
         var minstring1 = check(min1);
         var minstring2 = check(min2);
 
-        var timeString =  hourstring1 + " " +  hourstring2 +" : " + minstring1 + " " + minstring2;
+        var timeString =  hourstring1 + " " +  hourstring2 +"\n" + minstring1 + " " + minstring2;
         var view = View.findDrawableById("TimeLabel") as Text;
         view.setText(timeString);
 
+        var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+        var dateString = Lang.format(
+            "$1$.$2$.$3$",
+            [
+                today.day,
+                today.month,
+                today.year
+            ]
+        );
+
+        if (dateString != null) {
+            var viewdate = View.findDrawableById("date") as Text;
+            viewdate.setText(dateString);
+        }
+
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
+
     }
 
     function check(timenum) {
